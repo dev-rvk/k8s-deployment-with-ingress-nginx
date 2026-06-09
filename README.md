@@ -1,4 +1,4 @@
-# Lecture 2: Standard Ingress Controller with namespaces & local Kind configuration
+# Standard Ingress Controller with namespaces & local Kind configuration
 
 This project demonstrates how to deploy a multi-tier, multi-namespace application on a local **Kind (Kubernetes in Docker)** cluster using an official **NGINX Ingress Controller** (rather than a manually built reverse proxy).
 
