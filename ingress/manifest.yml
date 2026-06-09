@@ -1,0 +1,49 @@
+# 1. Pointer to the frontend service
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-ptr
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: frontend.frontend-team.svc.cluster.local
+---
+# 2. Pointer to the backend service
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-ptr
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: backend.backend-team.svc.cluster.local
+---
+# 3. Ingress routing to the pointers
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-apps-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: app.local
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend-ptr
+            port:
+              number: 3000
+      - path: /()(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: frontend-ptr
+            port:
+              number: 3000
